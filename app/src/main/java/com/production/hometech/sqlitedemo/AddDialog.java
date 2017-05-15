@@ -26,6 +26,7 @@ public class AddDialog extends DialogFragment implements View.OnClickListener {
     public void setValueAddedListener(SQLiteListener sqLiteListener){
         this.sqLiteListener = sqLiteListener;
     }
+
     /**
      * Create a new instance of MyDialogFragment, providing "num"
      * as an argument.
@@ -69,6 +70,9 @@ public class AddDialog extends DialogFragment implements View.OnClickListener {
 
         et_name = (EditText) v.findViewById(R.id.et_name);
         et_phone = (EditText) v.findViewById(R.id.et_phone);
+
+        et_name.setText("");
+        et_phone.setText("");
 
         bt_cancle.setOnClickListener(this);
         bt_add.setOnClickListener(this);

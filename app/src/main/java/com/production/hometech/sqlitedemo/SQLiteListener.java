@@ -6,5 +6,7 @@ package com.production.hometech.sqlitedemo;
 
 public interface SQLiteListener {
 
-    void valueAdded(Long id,Contact contact);
+    void valueAdded(Long id, Contact contact);
+
+    void valueUpdate(int position, Contact contact);
 }

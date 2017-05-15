@@ -23,9 +23,10 @@ public class UpdateDialog extends DialogFragment implements View.OnClickListener
     EditText et_name, et_phone;
     SQLiteListener sqLiteListener;
 
-    public void setValueAddedListener(SQLiteListener sqLiteListener){
+    public void setValueUpdateListener(SQLiteListener sqLiteListener) {
         this.sqLiteListener = sqLiteListener;
     }
+
     /**
      * Create a new instance of MyDialogFragment, providing "num"
      * as an argument.
@@ -95,9 +96,11 @@ public class UpdateDialog extends DialogFragment implements View.OnClickListener
 
                 DatabaseHandler handler = new DatabaseHandler(getActivity());
                 Contact contact = new Contact(et_name.getText().toString(), et_phone.getText().toString());
-                Long row = handler.addContact(contact);
-                if (sqLiteListener!=null)
-                    sqLiteListener.valueAdded(row,contact);
+                int row = handler.updateContact(contact);
+                Bundle bundle = getArguments();
+                int position = bundle.getInt("position");
+                if (sqLiteListener != null)
+                    sqLiteListener.valueUpdate(position, contact);
                 Toast.makeText(getActivity(), "Row id " + row, Toast.LENGTH_SHORT).show();
                 getDialog().dismiss();
 

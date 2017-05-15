@@ -24,7 +24,7 @@ import java.util.ArrayList;
  * Created by Arpit on 13-May-17.
  */
 
-public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ContactHolder> {
+public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ContactHolder> implements SQLiteListener {
 
     ArrayList<Contact> contactList;
     Context context;
@@ -52,6 +52,18 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ContactHolder> {
     @Override
     public int getItemCount() {
         return contactList.size();
+    }
+
+    @Override
+    public void valueAdded(Long id, Contact contact) {
+
+    }
+
+    @Override
+    public void valueUpdate(int position, Contact contact) {
+
+        contactList.set(position, contact);
+        notifyDataSetChanged();
     }
 
 
@@ -84,7 +96,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ContactHolder> {
                     Cursor mCursor = handler.rawQuery(
                             "SELECT id  FROM  savedstoriestable WHERE heading= '" + heading + "'", null);*/
 
-                    showDialog(contactList.get(getAdapterPosition()));
+                    showDialog(contactList.get(getAdapterPosition()), getAdapterPosition());
                     Toast.makeText(context, "click edit", Toast.LENGTH_SHORT).show();
 
                     break;
@@ -110,28 +122,34 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ContactHolder> {
     }
 
 
-    private void showDialog(Contact contact) {
+    private void showDialog(Contact contact, int position) {
 
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = ((MainActivity) context).getFragmentManager().beginTransaction();
+      /*  FragmentTransaction ft = ((MainActivity) context).getFragmentManager().beginTransaction();
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         Fragment prev = ((MainActivity) context).getFragmentManager().findFragmentByTag("dialog");
         if (prev != null) {
             ft.remove(prev);
         }
-        ft.addToBackStack(null);
+        ft.addToBackStack(null);*/
 
         Bundle args = new Bundle();
-        args.putString("mode", "update");
+        args.putInt("position", position);
         args.putString("name", contact.getName());
         args.putString("phone", contact.getPhone());
         args.putString("id", String.valueOf(contact.getId()));
         // Create and show the dialog.
-        DialogFragment newFragment = UpdateDialog.newInstance();
+      /*  DialogFragment newFragment = UpdateDialog.newInstance();
         newFragment.setArguments(args);
-        newFragment.show(ft, "dialog");
+        newFragment.show(ft, "dialog");*/
+        // Create and show the dialog.
+        UpdateDialog dialog;
+        dialog = new UpdateDialog();
+        dialog.setValueUpdateListener(this);
+        dialog.setArguments(args);
+        dialog.show(((MainActivity) context).getFragmentManager(), "");
     }
 
     /**

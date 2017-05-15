@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements SQLiteListener{
     RvAdapter rvAdapter;
     ArrayList<Contact> contacts;
 
+
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.add, menu);
@@ -49,8 +50,7 @@ public class MainActivity extends AppCompatActivity implements SQLiteListener{
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
-        AddDialog dialog =new AddDialog();
-        dialog.setValueAddedListener(this);
+
         DatabaseHandler handler = new DatabaseHandler(this);
        int records =  handler.deleteAllRecords();
         System.out.println(records+" Records deleted ");
@@ -95,8 +95,15 @@ public class MainActivity extends AppCompatActivity implements SQLiteListener{
 
             contacts.add(contact);
             rvAdapter.notifyDataSetChanged();
+            Toast.makeText(this, "Value Added", Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    public void valueUpdate(int position, Contact contact) {
+
+    }
+
 
     void showDialog() {
 
@@ -105,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements SQLiteListener{
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+      /*  FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag("dialog");
         if (prev != null) {
             ft.remove(prev);
@@ -113,12 +120,17 @@ public class MainActivity extends AppCompatActivity implements SQLiteListener{
         ft.addToBackStack(null);
 
         Bundle args = new Bundle();
-        args.putString("mode", "update");
+        args.putString("mode", "update");*/
 
         // Create and show the dialog.
-        DialogFragment newFragment = AddDialog.newInstance();
+        AddDialog dialog;
+        dialog =new AddDialog();
+        dialog.setValueAddedListener(this);
+        dialog.show(getFragmentManager(), "");
+      /*  DialogFragment newFragment = dialog;
+
         newFragment.setArguments(args);
-        newFragment.show(ft, "dialog");
+        newFragment.show(ft, "dialog");*/
     }
 
 
